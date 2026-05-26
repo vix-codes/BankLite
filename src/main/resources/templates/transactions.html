@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <a class="navbar-brand" href="/">BankLite</a>
+    <div class="navbar-nav">
+        <a class="nav-link" href="/">Dashboard</a>
+        <a class="nav-link" href="/web/accounts/new">Create Account</a>
+        <a class="nav-link" href="/web/deposit">Deposit</a>
+        <a class="nav-link" href="/web/withdraw">Withdraw</a>
+        <a class="nav-link" href="/web/transfer">Transfer</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Transaction History</h4>
+            <p class="mb-1"><strong>Account:</strong> <span th:text="|${account.id} - ${account.name}|">1 - Student</span></p>
+            <p class="mb-0"><strong>Current Balance:</strong> <span th:text="${#numbers.formatDecimal(account.balance, 1, 2)}">0.00</span></p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">Transactions</div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>From Account</th>
+                    <th>To Account</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.id}">1</td>
+                    <td th:text="${transaction.type}">DEPOSIT</td>
+                    <td th:text="${transaction.fromAccountId == null ? '-' : transaction.fromAccountId}">-</td>
+                    <td th:text="${transaction.toAccountId == null ? '-' : transaction.toAccountId}">1</td>
+                    <td th:text="${#numbers.formatDecimal(transaction.amount, 1, 2)}">0.00</td>
+                    <td th:text="${#temporals.format(transaction.createdAt, 'yyyy-MM-dd HH:mm')}">2026-01-01</td>
+                </tr>
+                <tr th:if="${transactions.isEmpty()}">
+                    <td colspan="6" class="text-center text-muted">No transactions found.</td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="/" class="btn btn-light">Back</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

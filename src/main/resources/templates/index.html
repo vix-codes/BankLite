@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BankLite Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <a class="navbar-brand" href="/">BankLite</a>
+    <div class="navbar-nav">
+        <a class="nav-link" href="/">Dashboard</a>
+        <a class="nav-link" href="/web/accounts/new">Create Account</a>
+        <a class="nav-link" href="/web/deposit">Deposit</a>
+        <a class="nav-link" href="/web/withdraw">Withdraw</a>
+        <a class="nav-link" href="/web/transfer">Transfer</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Accounts</h5>
+                    <p class="card-text h2" th:text="${accounts.size()}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">BankLite Dashboard</h4>
+                    <p class="card-text mb-0">Simple banking panel for account creation, deposits, withdrawals and transfers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            Account List
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Current Balance</th>
+                    <th>Created At</th>
+                    <th>History</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="account : ${accounts}">
+                    <td th:text="${account.id}">1</td>
+                    <td th:text="${account.name}">Student</td>
+                    <td class="font-weight-bold" th:text="${#numbers.formatDecimal(account.balance, 1, 2)}">0.00</td>
+                    <td th:text="${#temporals.format(account.createdAt, 'yyyy-MM-dd HH:mm')}">2026-01-01</td>
+                    <td>
+                        <a class="btn btn-sm btn-info" th:href="@{/web/accounts/{id}/transactions(id=${account.id})}">View</a>
+                    </td>
+                </tr>
+                <tr th:if="${accounts.isEmpty()}">
+                    <td colspan="5" class="text-center text-muted">No accounts created yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
