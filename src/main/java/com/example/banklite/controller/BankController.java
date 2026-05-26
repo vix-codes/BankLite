@@ -129,6 +129,12 @@ public class BankController {
     }
 
     @ResponseBody
+    @GetMapping("/accounts")
+    public List<Account> accounts() {
+        return bankService.getAllAccounts();
+    }
+
+    @ResponseBody
     @PostMapping("/accounts")
     public Account createAccount(@RequestParam String name,
                                  @RequestParam(defaultValue = "0") BigDecimal balance) {

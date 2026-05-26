@@ -1,0 +1,171 @@
+<div class="page">
+  <header class="topbar">
+    <div>
+      <h1>BankLite</h1>
+      <p>Simple banking API tester</p>
+    </div>
+    <button type="button" (click)="loadAccounts()">Refresh</button>
+  </header>
+
+  <section class="summary">
+    <div class="summary-card">
+      <span>Total Accounts</span>
+      <strong>{{ accounts.length }}</strong>
+    </div>
+    <div class="summary-card">
+      <span>Total Balance</span>
+      <strong>{{ totalBalance() | number:'1.2-2' }}</strong>
+    </div>
+    <div class="summary-card">
+      <span>Backend</span>
+      <strong>VPS API</strong>
+    </div>
+  </section>
+
+  <div *ngIf="message" class="alert success">{{ message }}</div>
+  <div *ngIf="error" class="alert error">{{ error }}</div>
+
+  <main class="grid">
+    <section class="panel">
+      <h2>Create Account</h2>
+      <form (ngSubmit)="createAccount()">
+        <label>Name</label>
+        <input name="newName" [(ngModel)]="newName" placeholder="Example: Ravi" required>
+
+        <label>Opening Balance</label>
+        <input name="openingBalance" [(ngModel)]="openingBalance" type="number" min="0">
+
+        <button type="submit">Create</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Deposit</h2>
+      <form (ngSubmit)="deposit()">
+        <label>Account</label>
+        <select name="depositAccountId" [(ngModel)]="depositAccountId" required>
+          <option value="">Select account</option>
+          <option *ngFor="let account of accounts" [value]="account.id">
+            {{ account.id }} - {{ account.name }}
+          </option>
+        </select>
+
+        <label>Amount</label>
+        <input name="depositAmount" [(ngModel)]="depositAmount" type="number" min="1" required>
+
+        <button type="submit">Deposit</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Withdraw</h2>
+      <form (ngSubmit)="withdraw()">
+        <label>Account</label>
+        <select name="withdrawAccountId" [(ngModel)]="withdrawAccountId" required>
+          <option value="">Select account</option>
+          <option *ngFor="let account of accounts" [value]="account.id">
+            {{ account.id }} - {{ account.name }}
+          </option>
+        </select>
+
+        <label>Amount</label>
+        <input name="withdrawAmount" [(ngModel)]="withdrawAmount" type="number" min="1" required>
+
+        <button type="submit">Withdraw</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Transfer</h2>
+      <form (ngSubmit)="transfer()">
+        <label>From</label>
+        <select name="fromAccountId" [(ngModel)]="fromAccountId" required>
+          <option value="">Select account</option>
+          <option *ngFor="let account of accounts" [value]="account.id">
+            {{ account.id }} - {{ account.name }}
+          </option>
+        </select>
+
+        <label>To</label>
+        <select name="toAccountId" [(ngModel)]="toAccountId" required>
+          <option value="">Select account</option>
+          <option *ngFor="let account of accounts" [value]="account.id">
+            {{ account.id }} - {{ account.name }}
+          </option>
+        </select>
+
+        <label>Amount</label>
+        <input name="transferAmount" [(ngModel)]="transferAmount" type="number" min="1" required>
+
+        <button type="submit">Transfer</button>
+      </form>
+    </section>
+  </main>
+
+  <section class="panel wide">
+    <div class="section-title">
+      <h2>Accounts</h2>
+      <span>Current balances</span>
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Balance</th>
+        <th>Created</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let account of accounts">
+        <td>{{ account.id }}</td>
+        <td>{{ account.name }}</td>
+        <td>{{ account.balance | number:'1.2-2' }}</td>
+        <td>{{ account.createdAt | date:'medium' }}</td>
+      </tr>
+      <tr *ngIf="accounts.length === 0">
+        <td colspan="4">No accounts yet.</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel wide">
+    <div class="section-title">
+      <h2>Transaction History</h2>
+      <span>Enter account id and load history</span>
+    </div>
+
+    <form class="inline-form" (ngSubmit)="getTransactions()">
+      <input name="historyAccountId" [(ngModel)]="historyAccountId" placeholder="Account id" required>
+      <button type="submit">Load History</button>
+    </form>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let transaction of transactions">
+        <td>{{ transaction.id }}</td>
+        <td>{{ transaction.type }}</td>
+        <td>{{ transaction.fromAccountId || '-' }}</td>
+        <td>{{ transaction.toAccountId || '-' }}</td>
+        <td>{{ transaction.amount | number:'1.2-2' }}</td>
+        <td>{{ transaction.createdAt | date:'medium' }}</td>
+      </tr>
+      <tr *ngIf="transactions.length === 0">
+        <td colspan="6">No transaction data loaded.</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -1,7 +1,6 @@
 {
-  "cleanUrls": true,
-  "buildCommand": "echo no build",
-  "outputDirectory": ".",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/banklite-frontend/browser",
   "rewrites": [
     {
       "source": "/api/:path*",
